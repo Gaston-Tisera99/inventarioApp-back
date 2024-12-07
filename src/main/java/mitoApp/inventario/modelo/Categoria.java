@@ -1,18 +1,15 @@
 package mitoApp.inventario.modelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
-@Data
+@Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
@@ -20,9 +17,14 @@ import java.util.Date;
 public class Categoria {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
-    String nombre;
-    String descripcion;
-    Date datacreated;
-    Integer status;
+    private Integer id;
+    private String nombre;
+    private String descripcion;
+    private Date datacreated;
+    private Integer status;
+
+    //relación de uno a muchos con Producto
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    @JsonBackReference
+    private List<Producto> productos;
 }

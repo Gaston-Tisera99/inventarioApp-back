@@ -1,6 +1,8 @@
 package mitoApp.inventario.servicio;
 
+import mitoApp.inventario.modelo.Categoria;
 import mitoApp.inventario.modelo.Producto;
+import mitoApp.inventario.repositorio.CategoriaRepositorio;
 import mitoApp.inventario.repositorio.ProductoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ public class ProductoServicio implements IProductoServicio{
 
     @Autowired
     private ProductoRepositorio productoRepositorio;
+
+    @Autowired
+    private CategoriaRepositorio categoriaRepositorio;
 
     @Override
     public List<Producto> listarProductos() {
@@ -26,7 +31,8 @@ public class ProductoServicio implements IProductoServicio{
 
     @Override
     public Producto guardarProducto(Producto producto) {
-        return this.productoRepositorio.save(producto);
+
+        return productoRepositorio.save(producto);
     }
 
     @Override

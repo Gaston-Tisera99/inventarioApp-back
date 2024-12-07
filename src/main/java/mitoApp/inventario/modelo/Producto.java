@@ -1,25 +1,28 @@
 package mitoApp.inventario.modelo;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@ToString
+@Getter @Setter
+@NoArgsConstructor @AllArgsConstructor
 public class Producto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer idProducto;
-    String descripcion;
-    Double precio;
-    Integer stock;
+    private Integer idProducto;
 
+    public Boolean validate(){ // <-- create validation method for prevent from null issue
+        return this.idProducto == null;
+    }
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "categoria_id")
+    @JsonManagedReference
+    private Categoria categoria;
+    private String codigo;
+    private String descripcion;
+    private Double precio;
+    private Integer stock;
 }
