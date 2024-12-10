@@ -31,19 +31,26 @@ public class CategoriaControlador {
         return categorias;
     }
 
-    //agregar una nueva categoria
-    @PostMapping("/categorias")
-    public ResponseEntity<Categoria> agregarCategoria(@RequestBody Categoria categoria){
-        if(categoria.getNombre().isEmpty() || categoria.getDescripcion().isEmpty()){
+    @PostMapping(value = "/categorias", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<Categoria> agregarCategoria(@RequestBody Categoria categoria) {
+        logger.info("Request recibida: " + categoria);
+
+        // Validación de los campos de la categoría
+        if (categoria.getNombre().isEmpty() || categoria.getDescripcion().isEmpty()) {
             throw new IllegalArgumentException("El nombre/descripcion de la categoria no puede estar vacio");
         }
 
+        // Establecer la fecha de creación de la categoría
         categoria.setDatacreated(new Date());
 
-        logger.info("Categoria a agregar: " + categoria);
+        // Guardar la nueva categoría
         Categoria nuevaCategoria = this.categoriaServicio.guardarCategoria(categoria);
+
+        // Devolver la respuesta con la nueva categoría
         return ResponseEntity.ok(nuevaCategoria);
     }
+
+
 
     @DeleteMapping("/categorias/{id}")
     public ResponseEntity<Map<String,Boolean>>
