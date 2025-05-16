@@ -50,6 +50,22 @@ public class CategoriaControlador {
         return ResponseEntity.ok(nuevaCategoria);
     }
 
+    @PutMapping("/categorias/{id}")
+    public ResponseEntity<Categoria> actualizarCategoria(@PathVariable int id, @RequestBody Categoria categoriaRecibido){
+        Categoria categoriaExistente = this.categoriaServicio.buscarCategoriaPorId(id);
+
+        if(categoriaExistente == null){
+            throw new RecursoNoEncontradoExcepcion("No se encontró la categoria con ID" + id);
+        }
+        categoriaExistente.setNombre(categoriaRecibido.getNombre());
+        categoriaExistente.setDescripcion(categoriaRecibido.getDescripcion());
+        categoriaExistente.setDatacreated(categoriaRecibido.getDatacreated());
+        categoriaExistente.setStatus(categoriaExistente.getStatus());
+        this.categoriaServicio.guardarCategoria(categoriaExistente);
+        return ResponseEntity.ok(categoriaExistente);
+
+    }
+
 
 
     @DeleteMapping("/categorias/{id}")
@@ -64,5 +80,24 @@ public class CategoriaControlador {
         respuesta.put("eliminando", Boolean.TRUE);
         return ResponseEntity.ok(respuesta);
     }
+
+    @PutMapping("/categorias/{id}/status")
+    public ResponseEntity<Categoria> actualizarEstadoCategoria(@PathVariable Integer id, @RequestBody Map<String, Integer> request)
+    {
+        Categoria categoria = categoriaServicio.buscarCategoriaPorId(id);
+        if(categoria == null){
+            throw new RecursoNoEncontradoExcepcion("No se encontró la categoría con ID: " + id);
+        }
+
+        Integer nuevoStatus = request.get("status");
+        if (nuevoStatus != 1 && nuevoStatus != 2) {
+            throw new IllegalArgumentException("El estado debe ser 1 (Activo) o 2 (Inactivo)");
+        }
+
+        categoria.setStatus(nuevoStatus);
+        Categoria categoriaActualizada = categoriaServicio.guardarCategoria(categoria);
+        return ResponseEntity.ok(categoriaActualizada);
+    }
+
 
 }
